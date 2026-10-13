@@ -7,14 +7,15 @@ from PIL import Image, ImageDraw
 import sys
 import os
 
-CLIENT_ID = 1460185850649514138
+CLIENT_ID = 1559658894165278890
 
-class SoHDiscordPresence:
+class Zelda64DiscordPresence:
     def __init__(self):
         self.rpc = None
         self.is_connected = False
         self.is_running = True
         self.process_running = False
+        self.game_start_time = None  # Almacena el tiempo para evitar reinicios constantes
         
     def create_image(self):
         """Load icon from assets folder"""
@@ -29,11 +30,11 @@ class SoHDiscordPresence:
         dc.rectangle([width // 4, height // 4, width * 3 // 4, height * 3 // 4], fill='gold')
         return image
     
-    def is_soh_running(self):
-        """Check if soh.exe is currently running"""
+    def is_zelda64_running(self):
+        """Check if Zelda64Recompiled.exe is currently running"""
         for proc in psutil.process_iter(['name']):
             try:
-                if proc.info['name'].lower() == 'soh.exe':
+                if proc.info['name'] and proc.info['name'].lower() == 'zelda64recompiled.exe':
                     return True
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
@@ -52,17 +53,19 @@ class SoHDiscordPresence:
             self.is_connected = False
     
     def update_presence(self):
-        """Update Discord Rich Presence"""
+        """Update Discord Rich Presence for Zelda 64 Recompiled"""
         try:
-            if self.rpc:
+            if self.rpc and self.is_connected:
+                # CORREGIDO: Textos cambiados específicamente para Majora's Mask y Termina
                 self.rpc.update(
-                    state="Playing Ship of Harkinian",
-                    details="The Legend of Zelda: Ocarina of Time",
-                    large_image="icon",  # You can set this in Discord Developer Portal
-                    large_text="The Legend of Zelda: Ocarina of Time",
-                    start=int(time.time())
+                    state="Exploring Termina",
+                    details="The Legend of Zelda: Majora's Mask",
+                    large_image="logo",
+                    large_text="Zelda 64: Recompiled",
+                    start=self.game_start_time  # Mantiene el tiempo fluido sin reinicios
                 )
                 print("Discord presence updated")
+
         except Exception as e:
             print(f"Failed to update presence: {e}")
     
@@ -78,22 +81,25 @@ class SoHDiscordPresence:
             print(f"Error disconnecting: {e}")
     
     def monitor_process(self):
-        """Monitor for soh.exe and manage Discord RPC accordingly"""
+        """Monitor Zelda64Recompiled.exe and manage Discord RPC"""
         while self.is_running:
-            soh_running = self.is_soh_running()
-            
-            if soh_running and not self.process_running:
-                print("soh.exe detected! Connecting to Discord...")
+            zelda_running = self.is_zelda64_running()
+
+            if zelda_running and not self.process_running:
+                print("Zelda64Recompiled.exe detected! Connecting to Discord...")
                 self.process_running = True
+                self.game_start_time = int(time.time())  # Se fija el tiempo justo al arrancar el juego
                 self.connect_rpc()
+
                 if self.is_connected:
                     self.update_presence()
-            
-            elif not soh_running and self.process_running:
-                print("soh.exe closed. Disconnecting from Discord...")
+
+            elif not zelda_running and self.process_running:
+                print("Zelda64Recompiled.exe closed. Disconnecting from Discord...")
                 self.process_running = False
+                self.game_start_time = None
                 self.disconnect_rpc()
-            
+
             time.sleep(5)  # Check every 5 seconds
     
     def on_quit(self, icon, item):
@@ -112,17 +118,17 @@ class SoHDiscordPresence:
         
         # Create system tray icon
         icon = pystray.Icon(
-            "SoH Discord Presence",
+            "Zelda 64 Recompiled Discord Presence",
             self.create_image(),
-            "SoH Discord Presence",
+            "Zelda 64 Recompiled Discord Presence",
             menu=pystray.Menu(
                 pystray.MenuItem("Quit", self.on_quit)
             )
         )
         
-        print("SoH Discord Presence is running in system tray...")
+        print("Zelda 64 Recompiled Discord Presence is running in system tray...")
         icon.run()
 
 if __name__ == "__main__":
-    app = SoHDiscordPresence()
+    app = Zelda64DiscordPresence()
     app.run()
