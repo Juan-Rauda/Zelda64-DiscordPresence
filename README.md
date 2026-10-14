@@ -2,7 +2,7 @@
 
 A Python program that automatically displays Discord Rich Presence when Zelda 64 Recompiled (Zelda64Recompiled.exe) is running.
 
-This is a custom modification for personal use, based on the original work by [Inkflow59](https://github.com).
+This is a custom modification for personal use, based on the original work by [Inkflow59](https://github.com/Inkflow59).
 
 ## Features
 
@@ -12,7 +12,7 @@ This is a custom modification for personal use, based on the original work by [I
 - Clean quit option from system tray
 
 ## Credits & Acknowledgments
-This project is a custom fork of the repository **[SoH-DiscordPresence](https://github.com/SoH-DiscordPresence)** developed by **[Inkflow59](https://github.com)**. All credits for the core logic, process monitoring loop, system tray integration, and compilation workflow go to the original author.
+This project is a custom fork of the repository **[SoH-DiscordPresence](https://github.com/Inkflow59/SoH-DiscordPresence)** developed by **[Inkflow59](https://github.com/Inkflow59)**. All credits for the core logic, process monitoring loop, system tray integration, and compilation workflow go to the original author.
 
 ## Setup Instructions
 
